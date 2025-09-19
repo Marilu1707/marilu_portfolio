@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# One-shot release script: analyze, build web, sanity-check output, and (optionally) deploy to Vercel.
+# One-shot release script: analyze, build web, and sanity-check output.
 # Usage:
-#   tool/release_web.sh [--renderer canvaskit|auto] [--deploy]
+#   tool/release_web.sh [--renderer canvaskit|auto]
 
 RENDERER="canvaskit"
-DEPLOY=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --renderer)
       RENDERER="$2"; shift 2;;
-    --deploy)
-      DEPLOY=true; shift;;
     *) echo "Unknown arg: $1"; exit 2;;
   esac
 done
@@ -31,11 +28,5 @@ echo "[4/4] Sanity-check build artifacts"
 [[ -f build/web/index.html ]] || { echo "Missing index.html in build/web"; exit 1; }
 [[ -f build/web/flutter.js ]] || { echo "Missing flutter.js in build/web"; exit 1; }
 
-if $DEPLOY; then
-  command -v vercel >/dev/null 2>&1 || { echo "Vercel CLI not found. Run: npm i -g vercel"; exit 1; }
-  echo "Deploying build/web to Vercel (production)..."
-  vercel --prod build/web
-fi
-
-echo "Done. Output in build/web. Use --deploy to publish via Vercel CLI."
+echo "Done. Output in build/web. Publicá la carpeta en tu hosting preferido."
 

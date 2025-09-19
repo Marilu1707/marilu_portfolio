@@ -128,7 +128,7 @@ class AppDiagnostics {
     if (kIsWeb) {
       out.add(const CheckResult(
         name: 'PWA / SPA',
-        details: 'Vercel debe reescribir /index.html para todas las rutas (ver vercel.json).',
+        details: 'El hosting debe redirigir todas las rutas a /index.html para la app de una sola página.',
         ok: true,
         warning: true,
       ));
