@@ -459,7 +459,7 @@ class _Dot extends StatelessWidget {
 class EduPill extends StatelessWidget {
   final String emoji;
   final String text;
-  const EduPill({super.key, required this.emoji, required this.text});
+  const EduPill({required this.emoji, required this.text});
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -498,8 +498,8 @@ class _LevelCard extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final VoidCallback onTap;
-  const _LevelCard(
-      {required this.title,
+  const _LevelCard({
+      required this.title,
       required this.subtitle,
       required this.icon,
       required this.onTap});

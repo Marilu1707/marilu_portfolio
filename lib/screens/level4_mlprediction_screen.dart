@@ -71,14 +71,14 @@ class _Level4MlPredictionScreenState extends State<Level4MlPredictionScreen> {
         'brie': -0.04,
         'azul': -0.06,
       };
-      final cheeseKey = (sugerido ?? '').toLowerCase();
+      final cheeseKey = sugerido.toLowerCase();
       _lastContribs = <String, double>{
         'Sesgo (base)': betas['bias']!,
         'Racha': (racha.toInt()).toDouble() * betas['racha']!,
         'Tiempo de juego (ms)': tiempoMs * betas['tiempo']!,
         'Hora del día': hora.toDouble() * betas['hora']!,
         'Stock visible': stockProm * betas['stock']!,
-        'Queso: ${sugerido ?? '-'}': betas[cheeseKey] ?? 0.0,
+        'Queso: $sugerido': betas[cheeseKey] ?? 0.0,
       };
     });
   }
@@ -317,7 +317,7 @@ class _ParametrosCard extends StatelessWidget {
 class _ResultadoCard extends StatelessWidget {
   final double? probPredicha;
   final String? sugerencia;
-
+ 
   const _ResultadoCard({
     required this.probPredicha,
     required this.sugerencia,

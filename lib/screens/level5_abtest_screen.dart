@@ -375,7 +375,7 @@ class _Level5AbTestScreenState extends State<Level5AbTestScreen> {
 
 class _Bullet extends StatelessWidget {
   final String text;
-  const _Bullet(this.text, {super.key});
+  const _Bullet(this.text);
   @override
   Widget build(BuildContext context) {
     return Padding(

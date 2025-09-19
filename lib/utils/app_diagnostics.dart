@@ -47,6 +47,8 @@ class AppDiagnostics {
     Map<String, WidgetBuilder>? routes,
   }) async {
     final List<CheckResult> out = [];
+    // Capture routes map before any async gaps to avoid using BuildContext afterwards
+    final routeMap = routes ?? _tryObtainRoutesFromContext(context);
 
     // 1) Assets
     for (final path in _assetsToCheck) {
@@ -59,7 +61,6 @@ class AppDiagnostics {
     }
 
     // 2) Rutas
-    final routeMap = routes ?? _tryObtainRoutesFromContext(context);
     for (final r in _routesToCheck) {
       final ok = routeMap.containsKey(r);
       out.add(CheckResult(

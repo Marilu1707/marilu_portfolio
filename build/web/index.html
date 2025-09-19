@@ -6,10 +6,14 @@
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="/">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  </style>
   <script>
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    window.flutterConfiguration = { renderer: "html" };
+    window.flutterConfiguration = { renderer: "canvaskit" };
   </script>
   <script src="flutter.js" defer></script>
 </head>

@@ -13,8 +13,8 @@
   <script>
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    // Usar CanvasKit para mejor soporte de blur/sombras del UI
-    window.flutterConfiguration = { renderer: "canvaskit" };
+    // Default to HTML renderer for maximum compatibility on Vercel
+    window.flutterConfiguration = { renderer: "html" };
   </script>
   <script src="flutter.js" defer></script>
 </head>

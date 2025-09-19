@@ -26,7 +26,6 @@ class Popup {
     };
 
     final overlay = Overlay.of(context, rootOverlay: true);
-    if (overlay == null) return;
 
     final animationCtrl = AnimationController(
       vsync: overlay,
@@ -140,4 +139,3 @@ class Popup {
     _entry = null;
   }
 }
-
