@@ -51,3 +51,6 @@ app.*.map.json
 # Desplegamos con GitHub Pages; no versionar build/
 # (Si necesitás Vercel usando docs/, ajustá según corresponda)
 .vercel
+
+# Ignore embedded Flutter SDK
+flutter/
