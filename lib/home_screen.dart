@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'utils/download_cv.dart';
+import 'utils/pdf_share.dart';
 
 // Pantalla Home: presentación, niveles, skills y contacto.
 class HomeDesktop extends StatelessWidget {
   const HomeDesktop({super.key});
+
+  // Ancla para "Juego Kawaii" (GameIntroCard)
+  static final GlobalKey _gameIntroKey = GlobalKey(debugLabel: 'game_intro_anchor');
 
   // Paleta kawaii
   static const bg = Color(0xFFFFF9E8);
@@ -32,6 +35,23 @@ class HomeDesktop extends StatelessWidget {
         backgroundColor: bg,
         elevation: 0,
         title: const Text('Marilú — Data Science'),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              final ctx = _gameIntroKey.currentContext;
+              if (ctx != null) {
+                Scrollable.ensureVisible(
+                  ctx,
+                  duration: const Duration(milliseconds: 450),
+                  curve: Curves.easeOut,
+                  alignment: 0.1,
+                );
+              }
+            },
+            icon: const Icon(Icons.sports_esports_rounded),
+            label: const Text('Juego Kawaii'),
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, c) {
@@ -82,7 +102,7 @@ class HomeDesktop extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                                  color: Colors.black.withValues(alpha: 0.05),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4)),
                             ],
@@ -231,6 +251,17 @@ class HomeDesktop extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
+                    // 🎮 Cómo funciona el juego (debajo de Sobre mí)
+                    KeyedSubtree(key: _gameIntroKey, child: const GameIntroCard()),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: FilledButton.icon(
+                        onPressed: () => Navigator.pushNamed(context, '/level1'),
+                        icon: const Icon(Icons.play_arrow_rounded),
+                        label: const Text('Jugar ahora'),
+                      ),
+                    ),
+
                     // Niveles
                     const _H3('🎮 Niveles'),
                     const SizedBox(height: 10),
@@ -289,7 +320,7 @@ class HomeDesktop extends StatelessWidget {
                         _contactBtn(Icons.code_rounded, 'GitHub',
                             () => _open(githubUrl)),
                         _contactBtn(Icons.picture_as_pdf_rounded,
-                            'Descargar CV', () => descargarCV(context)),
+                            'Descargar PDF', () => shareSampleKawaiiPdf(context)),
                       ],
                     ),
 
@@ -343,7 +374,7 @@ class _HomeCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 4)),
         ],
@@ -391,7 +422,7 @@ class _Chips extends StatelessWidget {
                         borderRadius: BorderRadius.circular(999),
                         border: Border.all(
                             color:
-            Colors.brown.shade200.withOpacity(0.5)),
+                                Colors.brown.shade200.withValues(alpha: 0.5)),
                       ),
                       child: Text(
                         t,
@@ -439,7 +470,7 @@ class EduPill extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
           border:
-          Border.all(color: Colors.brown.shade200.withOpacity(0.5)),
+          Border.all(color: Colors.brown.shade200.withValues(alpha: 0.5)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -486,7 +517,7 @@ class _LevelCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             color: Theme.of(context).colorScheme.surface,
             border: Border.all(
-                  color: Theme.of(context).dividerColor.withOpacity(0.4)),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.4)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -500,6 +531,134 @@ class _LevelCard extends StatelessWidget {
                       color: HomeDesktop.onAccent)),
               Text(subtitle),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// 🎮 Intro del juego (responsive)
+class GameIntroCard extends StatelessWidget {
+  const GameIntroCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Semantics(
+      container: true,
+      label: 'Explicación del juego del restaurante Kawaii',
+      child: LayoutBuilder(
+        builder: (context, cons) {
+          final isDesktop = cons.maxWidth >= 600;
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Text('🎮', textScaler: TextScaler.linear(1.2)),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Cómo funciona el juego',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                if (!isDesktop)
+                  Text(
+                    'Gestionás un Restaurante Kawaii 🧀🐭. '
+                    'Cumplí pedidos a tiempo, cuidá el stock y maximizá la conversión. '
+                    'Cada nivel enseña un concepto (inventario, métricas, ML y A/B test).',
+                    style: theme.textTheme.bodyMedium,
+                  )
+                else
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'En este simulador gestionás un Restaurante Kawaii 🧀🐭. '
+                        'Tenés que cumplir pedidos antes de que se acabe el tiempo, '
+                        'evitar desperdicio y optimizar la tasa de conversión.',
+                      ),
+                      SizedBox(height: 8),
+                      _GameIntroBullet('Nivel 1 — Pedidos y costo por desperdicio'),
+                      _GameIntroBullet('Nivel 2 — Métricas (puntaje y racha)'),
+                      _GameIntroBullet('Nivel 3 — Inventario y vencimientos'),
+                      _GameIntroBullet('Nivel 4 — Predicción (regresión logística online)'),
+                      _GameIntroBullet('Nivel 5 — A/B Test (prueba Z de dos proporciones)'),
+                    ],
+                  ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: const [
+                    _GameIntroTag(label: 'Tiempo ⏱️'),
+                    _GameIntroTag(label: 'Stock 📦'),
+                    _GameIntroTag(label: 'Conversión 📈'),
+                    _GameIntroTag(label: 'Aprendizaje 🎓'),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _GameIntroBullet extends StatelessWidget {
+  const _GameIntroBullet(this.text);
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('•  '),
+        Expanded(child: Text(text)),
+      ],
+    );
+  }
+}
+
+class _GameIntroTag extends StatelessWidget {
+  const _GameIntroTag({required this.label});
+  final String label;
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Semantics(
+      label: label,
+      button: true,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.6),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: theme.colorScheme.onSecondaryContainer,
           ),
         ),
       ),

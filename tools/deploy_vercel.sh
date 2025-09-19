@@ -1,22 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script de deploy a Vercel para Flutter Web (CLI)
-# - Construye localmente el sitio estático en build/web
-# - Copia vercel.json (headers y SPA fallback) a build/web
-# - Publica con Vercel CLI en producción apuntando a build/web
-# Requisitos:
-#   - Flutter instalado y en PATH
-#   - Node.js + Vercel CLI (npm i -g vercel)
+# Wrapper: delega al script raíz si existe, o hace deploy directo.
 
-RENDERER="${1:-canvaskit}"  # o "html"
+if [ -x "./deploy_vercel.sh" ]; then
+  exec ./deploy_vercel.sh "$@"
+fi
 
-# Checks
 command -v flutter >/dev/null 2>&1 || { echo "ERROR: Flutter no está en PATH"; exit 1; }
 command -v vercel  >/dev/null 2>&1 || { echo "ERROR: Vercel CLI no está en PATH (npm i -g vercel)"; exit 1; }
 
-# Asegura vercel.json completo con headers y SPA fallback
-if [ ! -f "vercel.json" ]; then
+RENDERER="${1:-canvaskit}"
+
+if [ ! -f vercel.json ]; then
   cat > vercel.json <<'JSON'
 {
   "version": 2,
@@ -43,20 +39,18 @@ if [ ! -f "vercel.json" ]; then
   ]
 }
 JSON
-  echo "✔ Creado vercel.json (headers + SPA fallback)"
+  echo "✔ Creado vercel.json con headers y SPA fallback"
 fi
 
-echo "[1/3] flutter clean + pub get"
+echo "🧹 flutter clean + pub get"
 flutter clean
 flutter pub get
 
-echo "[2/3] flutter build web (--web-renderer ${RENDERER}, base-href '/')"
+echo "🛠️ flutter build web --web-renderer ${RENDERER}"
 flutter build web --release --web-renderer "${RENDERER}" --base-href "/"
 
-echo "[2.5/3] copiando vercel.json a build/web…"
-cp -f vercel.json build/web/
+echo "🚀 vercel --prod build/web"
+vercel --prod build/web
 
-echo "[3/3] vercel --prod --confirm build/web"
-vercel --prod --confirm build/web
+echo "✅ Deploy OK"
 
-echo "✅ Deploy OK en Vercel. Revisá la URL que imprimió la CLI."
