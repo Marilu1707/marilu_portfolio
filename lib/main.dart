@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:overlay_support/overlay_support.dart';
 
 // Screens
 import 'home_screen.dart';
@@ -44,15 +43,13 @@ Future<void> main() async {
   await ordersState.load();
 
   runApp(
-    OverlaySupport.global(
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: appState),
-          ChangeNotifierProvider.value(value: ordersState),
-          ChangeNotifierProvider(create: (_) => ABResultState()..load()),
-        ],
-        child: const MariluApp(),
-      ),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: appState),
+        ChangeNotifierProvider.value(value: ordersState),
+        ChangeNotifierProvider(create: (_) => ABResultState()..load()),
+      ],
+      child: const MariluApp(),
     ),
   );
 }
@@ -75,13 +72,10 @@ Future<void> main() async {
             ),
           );
       return MaterialApp(
-        locale: const Locale('es', 'AR'),
-      supportedLocales: const [Locale('es', 'AR'), Locale('es'), Locale('en')],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+        debugShowCheckedModeBanner: false,
+        locale: const Locale('es'),
+        supportedLocales: const [Locale('es'), Locale('en')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
       // Limita el escalado de texto para evitar truncados en web/desktop
       builder: (context, child) {
         final media = MediaQuery.of(context);
@@ -93,7 +87,6 @@ Future<void> main() async {
         );
       },
       title: 'Marilú - Ciencia de Datos',
-      debugShowCheckedModeBanner: false,
       scrollBehavior: const _NoGlowScrollBehavior(),
       theme: KawaiiTheme.materialTheme(),
       initialRoute: '/',
