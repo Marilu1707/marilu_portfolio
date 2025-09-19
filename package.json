@@ -2,10 +2,6 @@
   "name": "marilu_portfolio_web_deploy",
   "private": true,
   "scripts": {
-    "build": "flutter build web --release",
-    "copy:vercel": "mkdir -p build/web && cp -f vercel.json build/web/vercel.json",
-    "preview": "npm run build && npm run copy:vercel && vercel --yes build/web",
-    "predeploy": "npm run build && npm run copy:vercel",
-    "deploy": "vercel --yes --prod"
+    "build": "flutter build web --release"
   }
 }

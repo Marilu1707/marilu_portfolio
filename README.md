@@ -8,7 +8,7 @@ Cada nivel es una metáfora de cómo aplico el ciclo completo de análisis de da
 ---
 
 ## 🌟 Demo
-👉 (acá podés poner el link cuando lo deployes en GitHub Pages, Vercel o Netlify)
+👉 (acá podés poner el link cuando lo publiques en tu hosting favorito)
 
 ---
 
